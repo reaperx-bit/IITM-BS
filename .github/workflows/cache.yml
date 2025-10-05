@@ -1,29 +1,20 @@
-name: CI with Cache Example
+name: Cache hit/miss test
 
 on: [push]
 
 jobs:
-  cache-job:
+  test-cache:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Check out code
-        uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
-      - name: prime-cache-59a11fc
-        id: cache-deps
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cache/pip
-          key: cache-59a11fc
+    - name: Cache dependencies
+      id: cache-deps
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pip
+        key: cache-59a11fc
 
-      - name: prime-cache-59a11fc
-        run: |
-          echo "Cache hit: ${{ steps.cache-deps.outputs.cache-hit }}"
-        # This will print 'Cache hit: true' if cache existed, 'Cache hit: false' if not
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+    - name: prime-cache-59a11fc
+      run: echo "Cache hit: ${{ steps.cache-deps.outputs.cache-hit }}"
